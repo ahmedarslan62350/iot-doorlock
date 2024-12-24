@@ -44,10 +44,12 @@ app.get("/api/control", async (req, res) => {
         }
         console.log("Status request sent");
 
-        // Wait for the status response
-        const handleMessage = (topic, message) => {
-          console.log(topic , message);
-          if (topic === statusTopic) {
+        let responseSent = false; // Flag to track if the response is sent
+
+        const handleMessage = async (topic, message) => {
+          if (topic === statusTopic && !responseSent) {
+            responseSent = true; // Ensure the response is sent only once
+
             console.log(`Received status: ${message.toString()}`);
             res.json({ message: message.toString() });
 
